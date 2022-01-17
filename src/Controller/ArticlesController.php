@@ -27,6 +27,7 @@ class ArticlesController extends AbstractController
         // Get all articles in Database
         $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
 
+
         // Convert object articles to JSON
         $json = $this->serializer->serialize($articles, 'json');
 
@@ -63,7 +64,7 @@ class ArticlesController extends AbstractController
     }
 
     /**
-     * @Route("articles/create", methods={"POST"}, name="rest_api_article_create")
+     * @Route("/articles/create", methods={"POST"}, name="rest_api_article_create")
      */
     public function createAction(Request $request)
     {
@@ -84,6 +85,31 @@ class ArticlesController extends AbstractController
             return new Response(null, Response::HTTP_CREATED);
         } catch (\Exception $e) {
             // Return BAD_REQUEST if created unsuccessfully
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * @Route("/articles/delete/{id}", methods={"DELETE"}, name="rest_api_delete")
+     */
+    public function deleteAction($id)
+    {
+        try {
+            // Get id from Request and try to delete
+            $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+            if ($article == null) {
+                $statusCode = Response::HTTP_NOT_FOUND;
+            } else {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($article);
+                $em->flush();
+
+                $statusCode = Response::HTTP_NO_CONTENT;
+            }
+
+            return new Response(null, $statusCode);
+        } catch (\Exception $e) {
+            // Return BAD_REQUEST if something went wrong
             return new Response(null, Response::HTTP_BAD_REQUEST);
         }
     }
