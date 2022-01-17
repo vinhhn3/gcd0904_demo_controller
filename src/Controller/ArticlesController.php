@@ -113,4 +113,28 @@ class ArticlesController extends AbstractController
             return new Response(null, Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * @Route("/articles/edit/{id}", methods={"PUT"}, name="rest_api_edit")
+     */
+    public function editAction(Request $request, $id)
+    {
+        // Find if article with id exsited
+        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+        if ($article == null) {
+            $statusCode = Response::HTTP_NOT_FOUND;
+        } else {
+            $data = json_decode($request->getContent(), true);
+            $article->setTitle($data['title']);
+            $article->setContent($data['content']);
+            $article->setDate(\DateTime::createFromFormat('Y-m-d', $data['date']));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($article);
+            $em->flush();
+
+            $statusCode = Response::HTTP_NO_CONTENT;
+        }
+        return new Response(null, $statusCode);
+    }
 }
