@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -59,5 +60,31 @@ class ArticlesController extends AbstractController
                 Response::HTTP_OK,
                 array('content-type' => 'application/json')
         );
+    }
+
+    /**
+     * @Route("articles/create", methods={"POST"}, name="rest_api_article_create")
+     */
+    public function createAction(Request $request)
+    {
+        try {
+            // Get data in Request from client
+            $article = new Article();
+            $data = json_decode($request->getContent(), true);
+            $article->setTitle($data['title']);
+            $article->setContent($data['content']);
+            $article->setDate(\DateTime::createFromFormat('Y-m-d', $data['date']));
+
+            // Try to insert new article to Database
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($article);
+            $em->flush();
+
+            // Return OK if created successfully
+            return new Response(null, Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            // Return BAD_REQUEST if created unsuccessfully
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
     }
 }
