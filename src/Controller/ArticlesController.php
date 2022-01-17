@@ -34,4 +34,30 @@ class ArticlesController extends AbstractController
                 array('content-type' => 'application/json')
         );
     }
+
+    /**
+     * @Route("/articles/{id}", methods={"GET"}, name="rest_api_article")
+     */
+    public function articleAction($id)
+    {
+        // Get a single article from Database
+        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+
+        // Article not found
+        if ($article == null) {
+            return new Response(json_encode(array('error' => 'article not found')),
+                    Response::HTTP_NOT_FOUND,
+                    array('content-type' => 'application/json')
+            );
+
+        }
+
+        // Article found
+        $json = $this->serializer->serialize($article, 'json');
+        return new Response(
+                $json,
+                Response::HTTP_OK,
+                array('content-type' => 'application/json')
+        );
+    }
 }
