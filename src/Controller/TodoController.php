@@ -92,8 +92,27 @@ class TodoController extends AbstractController
 
             return true;
         }
-
         return false;
+    }
+
+    /**
+     * @Route("/todo/edit/{id}", name="todo_edit", methods={"GET","POST"})
+     */
+    public function editAction($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $todo = $em->getRepository('App:Todo')->find($id);
+
+        $form = $this->createForm(TodoType::class, $todo);
+
+        if ($this->saveChanges($form, $request, $todo)) {
+            $this->addFlash('notice', 'Todo edited ...');
+            return $this->redirectToRoute('todo_list');
+        }
+
+        return $this->render('todo/edit.html.twig', [
+                'form' => $form->createView()
+        ]);
     }
 
 
