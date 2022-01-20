@@ -33,4 +33,22 @@ class TodoController extends AbstractController
                 'todo' => $todo
         ]);
     }
+
+    /**
+     * @Route("/todo/delete/{id}", methods={"GET"}, name="todo_delete")
+     */
+    public function deleteAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $todo = $em->getRepository('App:Todo')->find($id);
+        $em->remove($todo);
+        $em->flush();
+
+        $this->addFlash(
+                'error',
+                'Todo deleted ...'
+        );
+
+        return $this->redirectToRoute('todo_list');
+    }
 }
