@@ -19,4 +19,18 @@ class TodoController extends AbstractController
                 'todos' => $todos
         ]);
     }
+
+    /**
+     * @Route("/todo/details/{id}", methods={"GET"}, name="todo_details")
+     */
+    public function detailsAction($id)
+    {
+        $todo = $this->getDoctrine()
+                ->getRepository('App:Todo')
+                ->find($id);
+
+        return $this->render('todo/details.html.twig', [
+                'todo' => $todo
+        ]);
+    }
 }

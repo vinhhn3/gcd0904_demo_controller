@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <a href="{{ path('todo_list') }}" class="btn btn-default">Back to Todo List</a>
+    <hr/>
+    <h1>Details Todo</h1>
+    <h2 class="page-header">Title: {{ todo.name }}</h2>
+    <ul class="list-group">
+        <li class="list-group-item">Category: {{ todo.category }}</li>
+        <li class="list-group-item">Priority: {{ todo.priority }}</li>
+        <li class="list-group-item">Due: <strong>{{ todo.dueDate|date('F j,Y, g:i a') }}</strong></li>
+    </ul>
+    <h3>Description</h3>
+    <p>{{ todo.description }}</p>
+{% endblock %}
