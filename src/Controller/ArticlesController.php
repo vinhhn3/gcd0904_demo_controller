@@ -51,7 +51,6 @@ class ArticlesController extends AbstractController
                     Response::HTTP_NOT_FOUND,
                     array('content-type' => 'application/json')
             );
-
         }
 
         // Article found

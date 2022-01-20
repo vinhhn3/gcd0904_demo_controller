@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +30,16 @@ class PostsController extends AbstractController
      */
     public function demo()
     {
-        return $this->render('posts/demo.html.twig');
+        $post = new Post();
+        $post->setTitle("Post 1");
+        $post->setContent("Content 1");
+        $post->setAdded("Added 1");
+        $articleNumber = 1000;
+        return $this->render(
+                'posts/demo.html.twig',
+                array('post' => $post, 'articleNumber' => $articleNumber
+                )
+        );
     }
 
     /**

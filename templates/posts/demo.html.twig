@@ -1,4 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <h1>Hello This is Demo View</h1>
+    <h2>
+        {{ post.title }}
+    </h2>
+    <p>{{ post.content }}</p>
+    <p>{{ post.added }}</p>
+    {% if articleNumber < 100 %}
+        <p>Not many articles</p>
+    {% endif %}
+    {% if articleNumber > 100 %}
+        <p>So many articles</p>
+        <p>{{ articleNumber }} articles</p>
+    {% endif %}
 {% endblock %}
