@@ -45,7 +45,7 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/posts/create", name="create_get")
+     * @Route("/posts/create", methods={"GET","POST"}, name="create_get")
      */
     public function create(Request $request)
     {
