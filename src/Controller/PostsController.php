@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,12 +45,31 @@ class PostsController extends AbstractController
     }
 
     /**
-     * @Route("/posts/create", methods={"GET"}, name="create_get")
+     * @Route("/posts/create", name="create_get")
      */
-    public function create()
+    public function create(Request $request)
     {
-        return $this->render('posts/create.html.twig');
+        $post = new Post();
+        $postForm = $this->createForm(PostFormType::class, $post);
+        $postForm->handleRequest($request);
+
+        if ($postForm->isSubmitted() && $postForm->isValid()) {
+            $data = $postForm->getData();
+            $title = $data->getTitle();
+            $content = $data->getContent();
+            $added = $data->getAdded();
+
+            return $this->render("posts/display.html.twig", [
+                    "title" => $title,
+                    "content" => $content,
+                    "added" => $added
+            ]);
+        }
+        return $this->render('posts/create.html.twig',
+                ['postForm' => $postForm->createView()]
+        );
     }
+
 
     /**
      * @Route("posts/summary", methods={"GET"}, name="summary")

@@ -1,17 +1,10 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <h1>Create a new Post</h1>
-    <form>
-        <div>
-            <label>Description</label>
-            <input type="text" placeholder="Post description"/>
-        </div>
-        <div>
-            <label>Category</label>
-            <input type="text" placeholder="Category ..."/>
-        </div>
-        <div>
-            <button type="submit">Create</button>
-        </div>
-    </form>
+    <div>
+        {{ form_start(postForm) }}
+        {{ form_widget(postForm) }}
+        <input type="submit" value="Create"/>
+        {{ form_end(postForm) }}
+    </div>
 {% endblock %}
